@@ -1,0 +1,28 @@
+[binaries]
+c = ['aarch64-poky-linux-gcc', '-march=armv8-a', '-mtune=cortex-a57.cortex-a53', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/']
+cpp = ['aarch64-poky-linux-g++', '-march=armv8-a', '-mtune=cortex-a57.cortex-a53', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/']
+ar = ['aarch64-poky-linux-ar']
+nm = ['aarch64-poky-linux-nm']
+ld = ['aarch64-poky-linux-ld', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/']
+strip = ['aarch64-poky-linux-strip']
+readelf = ['aarch64-poky-linux-readelf']
+pkgconfig = 'pkg-config'
+
+[properties]
+needs_exe_wrapper = true
+c_args = ['-march=armv8-a', '-mtune=cortex-a57.cortex-a53', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/', '-O2', '-pipe', '-g', '-feliminate-unused-debug-types', '-fdebug-prefix-map=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/=', '-fdebug-prefix-map=/opt/poky/2.4.3/sysroots/x86_64-pokysdk-linux=']
+c_link_args = ['-march=armv8-a', '-mtune=cortex-a57.cortex-a53', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/', '-Wl,-O1', '-Wl,--hash-style=gnu', '-Wl,--as-needed']
+cpp_args = ['-march=armv8-a', '-mtune=cortex-a57.cortex-a53', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/', '-O2', '-pipe', '-g', '-feliminate-unused-debug-types', '-fdebug-prefix-map=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/=', '-fdebug-prefix-map=/opt/poky/2.4.3/sysroots/x86_64-pokysdk-linux=', '-fvisibility-inlines-hidden']
+cpp_link_args = ['-march=armv8-a', '-mtune=cortex-a57.cortex-a53', '--sysroot=/opt/poky/2.4.3/sysroots/aarch64-poky-linux/', '-Wl,-O1', '-Wl,--hash-style=gnu', '-Wl,--as-needed']
+
+[host_machine]
+system = 'linux'
+cpu_family = 'aarch64'
+cpu = 'aarch64'
+endian = 'bogus-endian'
+
+[target_machine]
+system = 'linux'
+cpu_family = 'aarch64'
+cpu = 'aarch64'
+endian = 'bogus-endian'

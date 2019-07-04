@@ -1,0 +1,53 @@
+From d383189421e2585d74c5b4c1b3b524c87688dc26 Mon Sep 17 00:00:00 2001
+From: Tomohito Esaki <etom@igel.co.jp>
+Date: Thu, 4 Jul 2019 10:40:53 +0900
+Subject: [PATCH 2/2] fix webkit_plugin_info_2015.patch for chromium test
+
+---
+ patch/patches/webkit_plugin_info_2015.patch | 33 +++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/patch/patches/webkit_plugin_info_2015.patch b/patch/patches/webkit_plugin_info_2015.patch
+index 2b16b127..d02e60e5 100644
+--- a/patch/patches/webkit_plugin_info_2015.patch
++++ b/patch/patches/webkit_plugin_info_2015.patch
+@@ -224,3 +224,36 @@ index 446cf8fbe161..299648db9c28 100644
+    void ResetPluginData();
+  
+    bool SupportsMimeType(const String& mime_type) const;
++diff --git third_party/blink/renderer/core/page/plugin_data_test.cc third_party/blink/renderer/core/page/plugin_data_test.cc
++index bda80c9276dd..06b44d92700c 100644
++--- third_party/blink/renderer/core/page/plugin_data_test.cc
+++++ third_party/blink/renderer/core/page/plugin_data_test.cc
++@@ -23,6 +23,7 @@ namespace {
++ class MockPluginRegistry : public mojom::blink::PluginRegistry {
++  public:
++   void GetPlugins(bool refresh,
+++		  bool is_main_frame,
++                   const scoped_refptr<const SecurityOrigin>& origin,
++                   GetPluginsCallback callback) override {
++     DidGetPlugins(refresh, *origin);
++@@ -62,7 +63,7 @@ TEST(PluginDataTest, NonStandardUrlSchemeRequestsPluginsWithUniqueOrigin) {
++       SecurityOrigin::CreateFromString("nonstandard-862282:foo/bar");
++   EXPECT_FALSE(non_standard_origin->IsOpaque());
++   auto* plugin_data = MakeGarbageCollected<PluginData>();
++-  plugin_data->UpdatePluginList(non_standard_origin.get());
+++  plugin_data->UpdatePluginList(true, non_standard_origin.get());
++ }
++ 
++ }  // namespace
++diff --git third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc
++index f039ed5dacdd..4357bfcd56d7 100644
++--- third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc
+++++ third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc
++@@ -27,6 +27,7 @@ class FakePluginRegistryImpl : public mojom::blink::PluginRegistry {
++ 
++   // PluginRegistry
++   void GetPlugins(bool refresh,
+++		  bool is_main_frame,
++                   const scoped_refptr<const SecurityOrigin>& origin,
++                   GetPluginsCallback callback) override {
++     auto mime = mojom::blink::PluginMimeType::New();
+-- 
+2.17.1
+

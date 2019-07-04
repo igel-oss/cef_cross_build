@@ -1,0 +1,40 @@
+From 9b4fa970f3cdf72b1d03c1eb5f4e33706967c629 Mon Sep 17 00:00:00 2001
+From: Tomohito Esaki <etom@igel.co.jp>
+Date: Wed, 3 Jul 2019 15:06:58 +0900
+Subject: [PATCH] fix dependency in using sysroot for ceftests
+
+---
+ BUILD.gn | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/BUILD.gn b/BUILD.gn
+index 350b41d6..1ca5e257 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -2190,6 +2190,12 @@ if (is_mac) {
+       sources = gypi_paths2.shared_sources_resources
+       outputs = [ "${root_out_dir}/ceftests_files/{{source_file_part}}" ]
+     }
++
++    pkg_config("glib") {
++      packages = [
++        "glib-2.0",
++      ]
++    }
+   }
+ 
+   executable("ceftests") {
+@@ -2233,9 +2239,7 @@ if (is_mac) {
+           "X11",
+         ]
+       } else {
+-        if (!use_sysroot) {
+-          configs += [ ":glib" ]
+-        }
++        configs += [ ":glib" ]
+       }
+ 
+       deps += [
+-- 
+2.17.1
+

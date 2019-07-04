@@ -1,0 +1,81 @@
+From a77eccf7e996a91b586584666df6102e89215d01 Mon Sep 17 00:00:00 2001
+From: Tomohito Esaki <etom@igel.co.jp>
+Date: Wed, 3 Jul 2019 18:51:13 +0900
+Subject: [PATCH 1/2] fix external_textures_1006.patch for chromium test
+
+---
+ patch/patches/external_textures_1006.patch | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/patch/patches/external_textures_1006.patch b/patch/patches/external_textures_1006.patch
+index dbee3361..36002d47 100644
+--- a/patch/patches/external_textures_1006.patch
++++ b/patch/patches/external_textures_1006.patch
+@@ -345,6 +345,32 @@ index 9751f1e74d82..ca3237a4d995 100644
+    ui::LatencyTracker latency_tracker_;
+    base::WeakPtrFactory<OffscreenBrowserCompositorOutputSurface>
+        weak_ptr_factory_;
++diff --git content/browser/compositor/test/test_image_transport_factory.cc content/browser/compositor/test/test_image_transport_factory.cc
++index c7956a2b7f74..2b4af49bcb03 100644
++--- content/browser/compositor/test/test_image_transport_factory.cc
+++++ content/browser/compositor/test/test_image_transport_factory.cc
++@@ -172,4 +172,8 @@ TestImageTransportFactory::GetContextFactoryPrivate() {
++   return this;
++ }
++ 
+++void* TestImageTransportFactory::GetSharedTexture(ui::Compositor* compositor) {
+++  return nullptr;
+++}
+++
++ }  // namespace content
++diff --git content/browser/compositor/test/test_image_transport_factory.h content/browser/compositor/test/test_image_transport_factory.h
++index 4cbfcc02680b..9646d3eda999 100644
++--- content/browser/compositor/test/test_image_transport_factory.h
+++++ content/browser/compositor/test/test_image_transport_factory.h
++@@ -87,6 +87,8 @@ class TestImageTransportFactory : public ui::ContextFactory,
++   ui::ContextFactory* GetContextFactory() override;
++   ui::ContextFactoryPrivate* GetContextFactoryPrivate() override;
++ 
+++  void* GetSharedTexture(ui::Compositor* compositor) override;
+++
++  private:
++   const bool enable_viz_;
++ 
+ diff --git gpu/GLES2/gl2chromium_autogen.h gpu/GLES2/gl2chromium_autogen.h
+ index 052b441e020d..9c3044185400 100644
+ --- gpu/GLES2/gl2chromium_autogen.h
+@@ -1315,3 +1341,31 @@ index 18cd096449d2..aa25ea058925 100644
+    void set_is_gpu_compositing_disabled(bool value) {
+      is_gpu_compositing_disabled_ = value;
+    }
++diff --git ui/compositor/test/in_process_context_factory.cc ui/compositor/test/in_process_context_factory.cc
++index c3eeff375aec..b4ddabcc2d5c 100644
++--- ui/compositor/test/in_process_context_factory.cc
+++++ ui/compositor/test/in_process_context_factory.cc
++@@ -412,6 +412,10 @@ void InProcessContextFactory::ResetOutputColorMatrixToIdentity(
++   iter->second->output_color_matrix.setIdentity();
++ }
++ 
+++void* InProcessContextFactory::GetSharedTexture(Compositor* compositor) {
+++  return nullptr;
+++}
+++
++ InProcessContextFactory::PerCompositorData*
++ InProcessContextFactory::CreatePerCompositorData(ui::Compositor* compositor) {
++   DCHECK(!per_compositor_data_[compositor]);
++diff --git ui/compositor/test/in_process_context_factory.h ui/compositor/test/in_process_context_factory.h
++index 58dfb4fc139c..1383adf5090d 100644
++--- ui/compositor/test/in_process_context_factory.h
+++++ ui/compositor/test/in_process_context_factory.h
++@@ -97,6 +97,8 @@ class InProcessContextFactory : public ContextFactory,
++   SkMatrix44 GetOutputColorMatrix(Compositor* compositor) const;
++   void ResetOutputColorMatrixToIdentity(ui::Compositor* compositor);
++ 
+++  void* GetSharedTexture(ui::Compositor* compositor) override;
+++
++  private:
++   struct PerCompositorData;
++ 
+-- 
+2.17.1
+
