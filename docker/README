@@ -1,0 +1,16 @@
+Build docker container for CEF cross building.
+
+Prepare
+-------
+Put the yocto toolchain SDK (ex. poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-2.4.3.sh) in the same directroy as the Dockerfile.
+It is necessary that the toolchain file name is "poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-[poky version].sh".
+
+Build container
+---------------
+Run docker build following as:
+
+$ docker build -t cef_build:16.04
+
+Specify poky version by --build-arg option if the toolchain poky version is not "2.4.3". For example:
+
+$ docker build --build-arg poky="2.6.2" -t cef_build:16.04
