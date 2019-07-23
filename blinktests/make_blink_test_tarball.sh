@@ -12,7 +12,6 @@ tar cf blink_tests.tar --transform='s/_GN_arm64//' --checkpoint=.1000 \
     out/Release_GN_arm64/content_shell* \
     out/Release_GN_arm64/*.dat \
     out/Release_GN_arm64/image_diff \
-    out/Release_GN_arm64/*.so \
     out/Release_GN_arm64/locales \
     out/Release_GN_arm64/pyproto \
     out/Release_GN_arm64/resources \
