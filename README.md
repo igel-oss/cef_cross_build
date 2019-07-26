@@ -1,8 +1,12 @@
 # CEF Cross Build for Renesas R-Car
 
+This repository tags:
+* cef-3770 - for CEF ver. 3770
+* cef-3809 - for CEF ver. 3809
+
 ## Environment
 
-The purpose is for the sample program "cefsimple" included in CEF to run in Renesas Yocto BSP on R-Car board. This procedure was tested on R-CarH3.  
+The purpose is for the sample program "cefsimple" included in CEF to run in Renesas Yocto BSP on R-Car board. This procedure was tested on R-CarH3.
 (https://bitbucket.org/chromiumembedded/cef/wiki/MasterBuildQuickStart.md#markdown-header-linux-setup )
 
 ## Get building tool and code
@@ -15,7 +19,7 @@ $ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 $ git clone https://bitbucket.org/chromiumembedded/cef.git
 ```
 
-As of 2019.06.21, CEF master HEAD is `732a307c751c2670a35fd9e0e4a491cdfc6bcc6b`.
+As of 2019.07.29, CEF master HEAD is `ccb06ce3cb70cdd37fafbf78b12a14b624183ac4`.
 
 Note: Since arm64 support patch has only recently been merged into the master branch, the patch may not yet be included in the stable branch.
 
@@ -26,6 +30,13 @@ Get cef_cross_build git repository for creating docker image.
 ```bash
 $ cd path/to/cef
 $ git clone https://github.com/igel-oss/cef_cross_build.git
+```
+
+If CEF version is latest, use master HEAD, otherwise, checkout according to the CEF version.
+
+```bash
+$ cd path/to/cef/cef_cross_build
+$ git checkout cef-[Version]
 ```
 
 Copy the Renesas Yocto BSP toolchain SDK to docker directroy. See the Yocto / BSP documentation for details on building the SDK.
@@ -57,9 +68,9 @@ $ cd /path/to/cef/
 $ cp cef/tools/automate/automate-git.py ./
 ```
 
-The automate-git.py has options to specify CEF and chromium checkout points. Use --checkout option to specify the CEF checkout point and --chromium-checkout option to specify the chromium checkout point. When -chromium-checkout is omitted, the latest available chromium is used (as of 2019.06.21, chromium ver. 75.0.3770.0 is selected).
+The automate-git.py has options to specify CEF and chromium checkout points. Use --checkout option to specify the CEF checkout point and --chromium-checkout option to specify the chromium checkout point. When -chromium-checkout is omitted, the latest available chromium is used (as of 2019.07.29, chromium ver. 76.0.3809.0 is selected).
 
-This build procedure has been tested on the master branch (Commit ID: `732a307c751c2670a35fd9e0e4a491cdfc6bcc6b`).
+This build procedure has been tested on the master branch (Commit ID: `ccb06ce3cb70cdd37fafbf78b12a14b624183ac4`).
 
 ```bash
 $ cd /path/to/cef
@@ -77,7 +88,7 @@ $ cd /path/to/cef/chromium/src/build/linux
 $ ln -s /opt/poky/2.4.3/sysroots/aarch64-poky-linux debian_sid_arm64-sysroot
 ```
 
-Build in docker container.
+Build in docker container. However, need to apply the patch "0001-Fix-compile-error-for-ver.-3809.patch" in cef_cross_build git repository to chromium as of 2019.07.29. (If CEF version is 3770, this patch is unnecessary.)
 
 ```bash
 $ cd /path/to/cef
@@ -87,6 +98,10 @@ docker$ export PATH=`pwd`:$PATH
 docker$ cd ../chromium/src/cef
 docker$ ./cef_create_projects.sh
 docker$ cd ../
+
+$ cd /path/to/cef/chromium/src
+$ patch -p1 < /path/to/cef/cef_cross_build/0001-Fix-compile-error-for-ver.-3809.patch
+
 docker$ ninja -j16 -C out/Release_GN_arm64/ cefsimple
 ```
 

@@ -1,0 +1,38 @@
+From 4988ca7a0c9fbf29516ce738c4707cf7ac5d7ce8 Mon Sep 17 00:00:00 2001
+From: Tomohito Esaki <etom@igel.co.jp>
+Date: Fri, 26 Jul 2019 11:08:37 +0900
+Subject: [PATCH] Fix compile error for ver. 3809
+
+---
+ BUILD.gn                                         | 2 --
+ libcef/browser/osr/render_widget_host_view_osr.h | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/BUILD.gn b/BUILD.gn
+index 038d279a..e49482b6 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -940,8 +940,6 @@ static_library("libcef_static") {
+ 
+     if (is_linux && !use_x11) {
+       sources += [
+-        "//ui/aura/test/mus/window_tree_client_test_api.h",
+-        "//ui/aura/test/mus/window_tree_client_test_api.cc",
+         "//ui/aura/test/ui_controls_factory_ozone.cc",
+         "//ui/events/test/events_test_utils.cc"
+       ]
+diff --git a/libcef/browser/osr/render_widget_host_view_osr.h b/libcef/browser/osr/render_widget_host_view_osr.h
+index 67185dde..2358736f 100644
+--- a/libcef/browser/osr/render_widget_host_view_osr.h
++++ b/libcef/browser/osr/render_widget_host_view_osr.h
+@@ -14,6 +14,7 @@
+ #include "include/cef_base.h"
+ #include "include/cef_browser.h"
+ 
++#include "libcef/browser/browser_host_impl.h"
+ #include "libcef/browser/osr/host_display_client_osr.h"
+ #include "libcef/browser/osr/motion_event_osr.h"
+ 
+-- 
+2.17.1
+

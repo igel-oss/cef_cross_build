@@ -1,45 +1,13 @@
-From cf95ca983d952303a8a204ec7b77989a776d7d03 Mon Sep 17 00:00:00 2001
+From b04321f416ea08c340007ab4c6e13c6023795272 Mon Sep 17 00:00:00 2001
 From: Tomohito Esaki <etom@igel.co.jp>
-Date: Thu, 11 Jul 2019 17:25:44 +0900
+Date: Fri, 26 Jul 2019 11:19:59 +0900
 Subject: [PATCH] fix build error for blink_tests
 
-Implement GetSharedTexture for blink_tests.
-Add is_main_frame parameter into GetPlugins for blink_tests.
 ---
- .../browser/compositor/test/test_image_transport_factory.cc   | 4 ++++
- .../browser/compositor/test/test_image_transport_factory.h    | 2 ++
- third_party/blink/renderer/core/page/plugin_data_test.cc      | 3 ++-
- .../renderer/core/testing/scoped_fake_plugin_registry.cc      | 1 +
- ui/compositor/test/in_process_context_factory.cc              | 4 ++++
- ui/compositor/test/in_process_context_factory.h               | 2 ++
- 6 files changed, 15 insertions(+), 1 deletion(-)
+ third_party/blink/renderer/core/page/plugin_data_test.cc       | 3 ++-
+ .../blink/renderer/core/testing/scoped_fake_plugin_registry.cc | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/content/browser/compositor/test/test_image_transport_factory.cc b/content/browser/compositor/test/test_image_transport_factory.cc
-index c7956a2b7f74..2b4af49bcb03 100644
---- a/content/browser/compositor/test/test_image_transport_factory.cc
-+++ b/content/browser/compositor/test/test_image_transport_factory.cc
-@@ -172,4 +172,8 @@ TestImageTransportFactory::GetContextFactoryPrivate() {
-   return this;
- }
- 
-+void* TestImageTransportFactory::GetSharedTexture(ui::Compositor* compositor) {
-+  return nullptr;
-+}
-+
- }  // namespace content
-diff --git a/content/browser/compositor/test/test_image_transport_factory.h b/content/browser/compositor/test/test_image_transport_factory.h
-index 4cbfcc02680b..9646d3eda999 100644
---- a/content/browser/compositor/test/test_image_transport_factory.h
-+++ b/content/browser/compositor/test/test_image_transport_factory.h
-@@ -87,6 +87,8 @@ class TestImageTransportFactory : public ui::ContextFactory,
-   ui::ContextFactory* GetContextFactory() override;
-   ui::ContextFactoryPrivate* GetContextFactoryPrivate() override;
- 
-+  void* GetSharedTexture(ui::Compositor* compositor) override;
-+
-  private:
-   const bool enable_viz_;
- 
 diff --git a/third_party/blink/renderer/core/page/plugin_data_test.cc b/third_party/blink/renderer/core/page/plugin_data_test.cc
 index bda80c9276dd..06b44d92700c 100644
 --- a/third_party/blink/renderer/core/page/plugin_data_test.cc
@@ -62,7 +30,7 @@ index bda80c9276dd..06b44d92700c 100644
  
  }  // namespace
 diff --git a/third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc b/third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc
-index f039ed5dacdd..4357bfcd56d7 100644
+index 2d3309bcf9fc..039f654bc0a7 100644
 --- a/third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc
 +++ b/third_party/blink/renderer/core/testing/scoped_fake_plugin_registry.cc
 @@ -27,6 +27,7 @@ class FakePluginRegistryImpl : public mojom::blink::PluginRegistry {
@@ -73,34 +41,6 @@ index f039ed5dacdd..4357bfcd56d7 100644
                    const scoped_refptr<const SecurityOrigin>& origin,
                    GetPluginsCallback callback) override {
      auto mime = mojom::blink::PluginMimeType::New();
-diff --git a/ui/compositor/test/in_process_context_factory.cc b/ui/compositor/test/in_process_context_factory.cc
-index c3eeff375aec..b4ddabcc2d5c 100644
---- a/ui/compositor/test/in_process_context_factory.cc
-+++ b/ui/compositor/test/in_process_context_factory.cc
-@@ -412,6 +412,10 @@ void InProcessContextFactory::ResetOutputColorMatrixToIdentity(
-   iter->second->output_color_matrix.setIdentity();
- }
- 
-+void* InProcessContextFactory::GetSharedTexture(Compositor* compositor) {
-+  return nullptr;
-+}
-+
- InProcessContextFactory::PerCompositorData*
- InProcessContextFactory::CreatePerCompositorData(ui::Compositor* compositor) {
-   DCHECK(!per_compositor_data_[compositor]);
-diff --git a/ui/compositor/test/in_process_context_factory.h b/ui/compositor/test/in_process_context_factory.h
-index 58dfb4fc139c..1383adf5090d 100644
---- a/ui/compositor/test/in_process_context_factory.h
-+++ b/ui/compositor/test/in_process_context_factory.h
-@@ -97,6 +97,8 @@ class InProcessContextFactory : public ContextFactory,
-   SkMatrix44 GetOutputColorMatrix(Compositor* compositor) const;
-   void ResetOutputColorMatrixToIdentity(ui::Compositor* compositor);
- 
-+  void* GetSharedTexture(ui::Compositor* compositor) override;
-+
-  private:
-   struct PerCompositorData;
- 
 -- 
 2.17.1
 

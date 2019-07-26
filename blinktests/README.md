@@ -14,6 +14,7 @@ Apply a patch into chromium to fix compiling errors, and build blink_tests and i
 
 ```bash
 $ cd /path/to/cef/chromium/src/
+$ patch -p1 < /path/to/cef/cef_cross_build/0001-Fix-compile-error-for-ver.-3809.patch
 $ patch -p1 < /path/to/cef/cef_cross_build/blinktests/for_chromium/0001-fix-build-error-for-blink_tests.patch
 
 docker$ ninja -j16 -C out/Release_GN_arm64/ blink_tests image_diff
@@ -86,7 +87,7 @@ DEPENDS_append_pn-libxml2 = " icu"
 ### Update recipes
 
 Some older branches of meta-cloud-server require a minor update to the
-build recipe. 
+build recipe.
 Fix python-virtualenv recipe in meta-cloud-service as follows:
 
 ```bash
@@ -115,7 +116,7 @@ $ bitbake core-image-weston
 ## Test environment setup
 
 blink_tests will not run as the root user, and the BSP environment does not
-provide a full mulit-user configuration for use with wayland by default. 
+provide a full mulit-user configuration for use with wayland by default.
 The following describes the minimum system settings to run blink_tests.
 
 ### Add test user
@@ -161,18 +162,17 @@ Download depot_tools to rootfs according to https://chromium.googlesource.com/ch
 
 Add depot_tools directory to the PATH environment variable.
 
-Set the full path location of apache config file `yocto-httpd-2.4.conf` in the WEBKIT_HTTP_SERVER_CONF_PATH environment variable. 
+Set the full path location of apache config file `yocto-httpd-2.4.conf` in the WEBKIT_HTTP_SERVER_CONF_PATH environment variable.
 
 ```bash
 rcar$ setenv PATH="${PATH}:/home/test/depot_tools"
 rcar$ setenv WEBKIT_HTTP_SERVER_CONF_PATH="/home/test/yocto-httpd-2.4.conf"
 ```
 
-## Running 
+## Running
 
 The full test suite can be run with the following command line:
 
 ```bash
 rcar$ ./third_party/blink/tools/run_web_tests.py --additional-driver-flag="--ozone-platform=wayland" --additional-driver-flag="--use-gl=egl" --additional-driver-flag="--in-process-gpu" --disable-breakpad --no-xvfb -j 2
 ```
-
