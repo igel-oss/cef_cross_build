@@ -5,7 +5,7 @@ if [ -z $1 ]; then
    exit 1
 fi
 (cd $1; \
-tar cf blink_tests.tar --transform='s/_GN_arm64//' --checkpoint=.1000 \
+tar cf blink_tests.tar --exclude="*.cc" --exclude="*.h" --exclude="*.c" --transform='s/_GN_arm64//' --checkpoint=.1000 \
     net \
     third_party/blink \
     third_party/pywebsocket \
