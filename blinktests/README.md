@@ -7,7 +7,8 @@ Refer to "Create build environment" section of the [main README](../README.md).
 
 ## Build
 
-The following assumes that the source/build directories hav been used to successfully compile cefsimple at least once.
+The following assumes that the source/build directories have been used to successfully compile cefsimple at least once.
+Please follow the instructions in the "Build" section of the [main README](../README.md) if you have not yet done so.
 
 Apply a patch into chromium to fix compiling errors, and build blink_tests and imagediff. The patch is located in the `blinktests/for_chromium` directory of cef_cross_build git repository.
 
