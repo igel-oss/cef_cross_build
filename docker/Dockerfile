@@ -32,7 +32,7 @@ COPY poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh /tmp
 
 RUN /tmp/poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh && \
     cd /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/lib/aarch64-poky-linux/ && \
-    cd $(ls) && cp * ../../ && cd /tmp && \
+    cd $(ls) && cp *.o *.a ../../ && cd /tmp && \
     rm poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh
 
 COPY pipewire/meson.cross /tmp
