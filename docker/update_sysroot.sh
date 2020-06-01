@@ -9,10 +9,11 @@ fi
 git clone https://github.com/PipeWire/pipewire.git
 mv meson.cross pipewire/
 cd pipewire
+git checkout 0.2
 mkdir build
 . /opt/poky/$1/environment-setup-aarch64-poky-linux
 unset CC CXX
-meson build --cross-file meson.cross --prefix /usr
+meson build --cross-file meson.cross --prefix /usr -Djack=false -Dpipewire-jack=false
 ninja -C build
 DESTDIR=$SDKTARGETSYSROOT ninja -C build/ install
 cd /tmp
