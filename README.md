@@ -79,7 +79,7 @@ This build procedure has been tested on the wayland_support branch of msisov/cef
 
 ```bash
 $ cd /path/to/cef
-$ python ./automate-git.py --download-dir=. --no-distrib --no-build --checkout=bbc875c6c8b5aecc176141a7a88002631ee1bad2
+$ python ./automate-git.py --download-dir=. --no-distrib --no-build --checkout=bbc875c6c8b5aecc176141a7a88002631ee1bad2 --url=https://bitbucket.org/msisov/cef
 ```
 
 Wait a very long time for the Chromium source code to be downloaded.
