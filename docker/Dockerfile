@@ -36,8 +36,8 @@ RUN /tmp/poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh &&
     rm poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh
 
 COPY X11 /tmp/X11
-RUN cp /tmp/X11/libXss* /opt/poky/3.0/sysroots/aarch64-poky-linux/usr/lib/ && \
-    cp /tmp/X11/scrnsaver.h /opt/poky/3.0/sysroots/aarch64-poky-linux/usr/include/X11/extensions/ && \
+RUN cp /tmp/X11/libXss* /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/lib/ && \
+    cp /tmp/X11/scrnsaver.h /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/include/X11/extensions/ && \
     rm -rf /tmp/X11
 
 COPY pipewire/meson.cross /tmp
