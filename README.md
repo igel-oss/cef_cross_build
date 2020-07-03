@@ -44,7 +44,7 @@ $ cd path/to/cef/cef_cross_build
 $ git checkout ozone-wayland-test
 ```
 
-Copy the Renesas Yocto BSP toolchain SDK to docker directroy. See the Yocto / BSP documentation for details on building the SDK.
+Copy the Renesas Yocto BSP toolchain SDK to docker directroy. See the Yocto / BSP documentation for details on building the SDK. Note that it is necessary that `IMAGE_INSTALL_ append = " pciutils"` is added to `local.conf` when the SDK is built.
 
 ```bash
 $ cp poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-2.4.3 cef_cross_build/docker/
