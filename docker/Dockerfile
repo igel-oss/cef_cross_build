@@ -35,10 +35,21 @@ RUN /tmp/poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh &&
     cd $(ls) && cp *.o *.a ../../ && cd /tmp && \
     rm poky-glibc-x86_64-core-image-weston-sdk-aarch64-toolchain-${poky}.sh
 
-COPY X11 /tmp/X11
-RUN cp /tmp/X11/libXss* /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/lib/ && \
-    cp /tmp/X11/scrnsaver.h /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/include/X11/extensions/ && \
-    rm -rf /tmp/X11
+# prepare to install libXss
+RUN echo "deb [arch=arm64] http://jp.archive.ubuntu.com/ports/ bionic main restricted" >> /etc/apt/sources.list.d/arm64-dist.list && \
+    dpkg --add-architecture arm64 && apt update; exit 0
+
+# install libXss
+RUN cd /tmp && mkdir xss && cd xss && \
+    apt download libxss1:arm64 libxss-dev:arm64 && \
+    ar vx libxss1* && tar xvf data.tar.gz && \
+    ar vx libxss-dev* && tar xvf data.tar.gz && \
+    cp usr/lib/aarch64-linux-gnu/libXss.so*  /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/lib/ && \
+    cp usr/include/X11/extensions/scrnsaver.h /opt/poky/${poky}/sysroots/aarch64-poky-linux/usr/include/X11/extensions/ && \
+    cd /tmp && rm -rf xss && \
+    dpkg --remove-architecture arm64 && \
+    rm -rf /etc/apt/sources.list.d/arm64-dist.list && \
+    apt update
 
 COPY pipewire/meson.cross /tmp
 COPY update_sysroot.sh /tmp
